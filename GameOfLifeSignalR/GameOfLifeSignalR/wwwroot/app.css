@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=DotGothic16&display=swap');
+
+html, body {
+    font-family: 'DotGothic16', sans-serif;
+    background: #00120B;
+    margin: 0;
+    padding: 0;
+}
+
+div:focus {
+    outline: 0;
+}
+
+div::selection {
+    outline: none;
+}
+
+input, button {
+    font-family: 'DotGothic16', sans-serif;
+}
+
+#page-start {
+    display: flex;
+    width: 100vw;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
+#page-start-menu {
+    background: #6B818C;
+    padding: 2em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.5em;
+}
+
+#page-start-menu a {
+    margin-bottom: 0.5em;
+}
+
+#page-start-menu a:link,
+#page-start-menu a:visited {
+    text-decoration: none;
+    color: #35605A;
+}
+
+#page-start-menu a:hover {
+    text-decoration: none;
+    color: #31E981;
+}
+
+
+#lobby-page {
+    display: flex;
+    width: 100vw;
+    min-height: 100vh;
+    justify-content: center;
+    align-content: center;
+}
+
+#fields-list {
+    padding: 1.5em;
+    background: #6B818C;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    max-width: 1000px;
+    margin: 2em;
+}
+
+.connect-button {
+    padding: 0.5em;
+    border: 1px solid;
+    border-radius: 0px;
+    font-weight: 800;
+    background: green;
+}
+
+.connect-button:hover {
+    background: lightgreen;
+}
+
+#field-page {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    color: #35605A;
+    font-size: 1.1em;
+}
+
+
+#field-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.game-room-info {
+    margin-bottom: 3em;
+}
+
+
+
+.field-row {
+    display: flex;
+}
+
+.field-cell {
+    width: 20px;
+    height: 20px;
+}
+
+.state-filled {
+    background: black;
+}
+
+.state-empty {
+    background: white;
+}
+
+.state-selected {
+    background: blue;
+}
+
+.state-highlited {
+    background: green;
+}
+

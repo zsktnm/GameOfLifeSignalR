@@ -1,0 +1,135 @@
+﻿@page "/field/{id}"
+
+@rendermode InteractiveWebAssembly
+
+@implements IAsyncDisposable
+
+@inject NavigationManager Navigation
+
+<div id="field-page" @ref="container" @onfocusout="async () => await container.FocusAsync()">
+        @if (RoomInfo is null || GameField is null)
+        {
+            <p style="color: green">Загрузка...</p>
+        }
+        else
+        {
+            <div id="field-container" tabindex="0" @onkeydown="e => SendCells(e)">
+            @for (int i = 0; i < GameField.Rows; i++)
+            {
+                <div class="field-row">
+                    @for (int j = 0; j < GameField.Columns; j++)
+                    {
+                        int row = i;
+                        int col = j;
+                        <div class="field-cell @GetClassName(row, col)" @onclick="() => GameField.SelectCell(row, col)"></div>
+                    }
+                </div>
+            }
+            </div>
+            <p>
+                Выделите ячейки с помощью мыши. <br />
+                Используйте Backspace для очистки рисунка <br />
+                Нажмите Enter для отправки рисунка <br />
+                Чтобы выйти в лобби нажмите Q
+            </p>
+        }
+</div>
+
+
+@code {
+    [Parameter]
+    public string? Id { get; set; }
+
+    private ElementReference container;
+    private HubConnection hubConnection = null!;
+    private Timer? timer;
+
+    private RoomInfoDTO? RoomInfo { get; set; }
+    private GameField? GameField { get; set; }
+    private List<Cell> Highlited { get; set; } = new();
+
+    private async void SendCells(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await hubConnection.InvokeAsync("SendFilledCells", Id, GameField?.SelectedCells ?? []);
+            GameField?.DeselectAll();
+        }
+        else if (e.Key == "Backspace")
+        {
+            GameField?.DeselectAll();
+        }
+        else if (e.Key == "Q" || e.Key == "q")
+        {
+            Navigation.NavigateTo("/lobby");
+        }
+    }
+
+    private void SetGameField(RoomInfoDTO roomInfo)
+    {
+        RoomInfo = roomInfo;
+        var temp = new GameField(RoomInfo.Field);
+        if (GameField is not null)
+        {
+            foreach (Cell selected in GameField.SelectedCells)
+            {
+                temp.SelectCell(selected.Row, selected.Col);
+            }
+        }
+        GameField = temp;
+    }
+
+    private void Highlight(List<Cell> cells)
+    {
+        Highlited = cells;
+    }
+
+    private string GetClassName(int i, int j)
+    {
+        if (GameField?.IsSelected(i, j) == true)
+        {
+            return "state-selected";
+        }
+        var highlight = Highlited.FirstOrDefault(c => c.Row == i && c.Col == j);
+        if (highlight is not null)
+        {
+            Highlited.Remove(highlight);
+            return "state-highlited";
+        }
+        return $"state-{GameField?.Field[i, j].ToString().ToLower()}";
+    }
+
+    private void OnTick(object? sender)
+    {
+        GameField?.EvolutionStep();
+        StateHasChanged();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await container.FocusAsync();
+            hubConnection = new HubConnectionBuilder()
+                .WithUrl(Navigation.ToAbsoluteUri("/gamehub"))
+                .Build();
+
+            hubConnection.On("Leave", () => Navigation.NavigateTo("lobby"));
+            hubConnection.On<RoomInfoDTO>("LoadRoom", SetGameField);
+            hubConnection.On<List<Cell>>("HighlightCells", Highlight);
+
+            await hubConnection.StartAsync();
+            await hubConnection.InvokeAsync("Enter", Id);
+
+            timer = new Timer(OnTick, null, TimeSpan.Zero, TimeSpan.FromSeconds(0.25));
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.DisposeAsync();
+        }
+    }
+}

@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34309.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameOfLifeSignalR", "GameOfLifeSignalR\GameOfLifeSignalR\GameOfLifeSignalR.csproj", "{91EC51D7-A877-4825-A6CA-2487B8963B4F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameOfLifeSignalR.Client", "GameOfLifeSignalR\GameOfLifeSignalR.Client\GameOfLifeSignalR.Client.csproj", "{8AC03D26-FE4D-4D41-8EAE-A504C99F736B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameOfLifeSignalR.Shared", "GameOfLifeSignalR.Shared\GameOfLifeSignalR.Shared.csproj", "{6DB4F149-CB73-41D7-84FE-64BFFD836551}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{91EC51D7-A877-4825-A6CA-2487B8963B4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91EC51D7-A877-4825-A6CA-2487B8963B4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91EC51D7-A877-4825-A6CA-2487B8963B4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91EC51D7-A877-4825-A6CA-2487B8963B4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AC03D26-FE4D-4D41-8EAE-A504C99F736B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AC03D26-FE4D-4D41-8EAE-A504C99F736B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AC03D26-FE4D-4D41-8EAE-A504C99F736B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AC03D26-FE4D-4D41-8EAE-A504C99F736B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DB4F149-CB73-41D7-84FE-64BFFD836551}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DB4F149-CB73-41D7-84FE-64BFFD836551}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DB4F149-CB73-41D7-84FE-64BFFD836551}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DB4F149-CB73-41D7-84FE-64BFFD836551}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CD7CA576-8347-48F0-856C-0CFBB0475C5A}
+	EndGlobalSection
+EndGlobal

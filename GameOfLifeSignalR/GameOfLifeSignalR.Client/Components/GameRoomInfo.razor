@@ -1,0 +1,26 @@
+﻿@rendermode InteractiveWebAssembly
+
+<div class="game-room-info">
+    <h4>Поле игры (@RoomInfo.Guid)</h4>
+    <p>Количество игроков: @RoomInfo.CurrentPlayers/@RoomInfo.MaxPlayers </p>
+    @if (!IsFull)
+    {
+        <button class="connect-button" @onclick="async () => await OnConnectionClicked.InvokeAsync(RoomInfo.Guid.ToString())">
+            Присоединиться
+        </button>
+    }
+    else
+    {
+        <p>Комната переполнена</p>   
+    }
+</div>
+
+@code {
+    [Parameter]
+    public RoomInfoDTO RoomInfo { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<string> OnConnectionClicked { get; set; }
+
+    public bool IsFull => RoomInfo.CurrentPlayers >= RoomInfo.MaxPlayers;
+}

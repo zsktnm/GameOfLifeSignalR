@@ -1,0 +1,80 @@
+﻿@page "/lobby"
+
+@rendermode InteractiveWebAssembly
+
+@implements IAsyncDisposable
+
+@inject NavigationManager Navigation
+
+<div id="lobby-page">
+    <div id="fields-list">
+        @foreach (RoomInfoDTO room in rooms)
+        {
+            <GameRoomInfo RoomInfo="room" OnConnectionClicked="id => Navigate(id)" />
+        }
+    </div>
+</div>
+
+@code
+{
+    private HubConnection? hubConnection;
+    private List<RoomInfoDTO> rooms = [];
+
+    private void Navigate(string id)
+    {
+        Navigation.NavigateTo($"/field/{id}");
+    }
+
+    private async Task LoadRooms(IEnumerable<RoomInfoDTO> newRooms)
+    {
+        rooms.Clear();
+        rooms.AddRange(newRooms);
+        await this.InvokeAsync(() => StateHasChanged());
+    }
+
+    private void IncPlayerCount(string roomId)
+    {
+        var room = rooms.FirstOrDefault(r => r.Guid.ToString() == roomId);
+        if (room is not null)
+        {
+            room.CurrentPlayers++;
+            StateHasChanged();
+        }
+    }
+
+    private void DecPlayerCount(string roomId)
+    {
+        var room = rooms.FirstOrDefault(r => r.Guid.ToString() == roomId);
+        if (room is not null)
+        {
+            room.CurrentPlayers--;
+            StateHasChanged();
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            hubConnection = new HubConnectionBuilder()
+            .WithUrl(Navigation.ToAbsoluteUri("/gamehub"))
+            .WithAutomaticReconnect()
+            .Build();
+
+            hubConnection.On<List<RoomInfoDTO>>("GetGamesList", LoadRooms);
+            hubConnection.On<string>("IncPlayerCount", IncPlayerCount);
+            hubConnection.On<string>("DecPlayerCount", DecPlayerCount);
+
+            await hubConnection.StartAsync();
+        }
+    }
+
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.DisposeAsync();
+        }
+    }
+}
